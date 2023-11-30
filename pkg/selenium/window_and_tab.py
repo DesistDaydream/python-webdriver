@@ -4,7 +4,7 @@ from selenium import webdriver
 
 
 def tabHandle(driver: webdriver.Chrome):
-    # WebDriver 不区分窗口和标签页。如果打开了一个新标签页或窗口，Selenium 将使用 **Handle(句柄)** 处理它，每个标签页和窗口的 Handle 是其唯一的标识符，该标识符在单个会话中保持持久性。  # noqa: E501
+    # WebDriver 不区分窗口和标签页。如果打开了一个新标签页或窗口，Selenium 将通过 **Handle(句柄)** 处理它，每个标签页和窗口的 Handle 是其唯一的标识符，该标识符在单个会话中保持持久性。  # noqa: E501
     # 可以使用以下方法获得当前窗口的窗口句柄:
     print(driver.current_window_handle)
     # 这个窗口的 Handle 与打开窗口时创建的第一个标签页的 Handle 相同。，若创建了第二个标签页，关闭了第一个标签页，则窗口的 Handle 与 第二个标签页的 Handle 相同。也就是说，窗口即是标签页。窗口就是打开的第一个标签页。  # noqa: E501
