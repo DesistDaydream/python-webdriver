@@ -105,14 +105,6 @@ def get_track(distance):
     return tracks
 
 
-# 生成一个列表，和为19
-def generate_list():
-    while True:
-        lst = random.sample(range(1, 20), random.randint(2, 4))
-        if sum(lst) == 19:
-            return lst
-
-
 def get_chrome_driver_exec_path():
     if not os.path.exists(version_file_path):
         return ""
@@ -184,11 +176,6 @@ def handlingSlider(driver: webdriver.Chrome):
         time.sleep(0.18)
         action.move_by_offset(-3, 0).perform()
         action.move_by_offset(3, 0).perform()
-        # action.move_by_offset(distance + random.randint(22, 23), 0).perform()  # 移动缺口过后
-        # time.sleep(random.uniform(0.5, 0.8))  # 停留时间
-        # for x in generate_list():
-        #     action.move_by_offset(-x, 0).perform()  # 逆向移动
-        #     time.sleep(random.uniform(0.1, 0.3))
         # ==========================
         action.release().perform()  # 释放滑块
 
