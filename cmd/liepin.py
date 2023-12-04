@@ -1,4 +1,3 @@
-from typing import Any
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
@@ -6,7 +5,7 @@ from selenium.webdriver import ActionChains
 import cv2
 import requests
 
-import sys, time, random  # noqa: E401
+import sys, time  # noqa: E401
 
 backgroundImgPath = "./images/lp_background.png"
 blockImgPath = "./images/lp_block.png"
@@ -50,12 +49,6 @@ def login(driver: webdriver.Chrome) -> None:
     driver.find_element(
         By.XPATH, '//*[@id="home-banner-login-container"]/div/div/div/div/div[3]/div/form/button'
     ).click()
-
-    # 处理图片
-    maxLoc = handlingImg()
-
-    # 处理滑块验证
-    handlingSlider(driver, maxLoc)
 
 
 def handlingImg() -> int:
@@ -155,8 +148,8 @@ def get_track(distanceTotal: int):
     print("待移动距离: {},计算出的总移动距离: {}".format(distanceTotal, sum(tracks)))
     print(tracks)
 
+    # 有事计算出来的移动轨迹总和会超过待移动轨迹，此时需要再往回移动一些
     backTracks = 0
-
     if sum(tracks) > distanceTotal:
         backTracks = distanceTotal - sum(tracks)
         print(backTracks)
@@ -173,7 +166,7 @@ if __name__ == "__main__":
     #     driver.switch_to.window(handle)
     #     if driver.title == "【猎聘】-招聘_找工作_求职_企业招人平台":
     #         break
-    # # 处理图片
-    # maxLoc = handlingImg()
-    # # 处理滑块验证
-    # handlingSlider(driver, maxLoc)
+    # 处理图片
+    maxLoc = handlingImg()
+    # 处理滑块验证
+    handlingSlider(driver, maxLoc)

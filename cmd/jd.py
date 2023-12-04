@@ -1,12 +1,10 @@
-from typing import Any
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
 
 import cv2
-import requests
 
-import sys, time, random, base64  # noqa: E401
+import time, random, base64  # noqa: E401
 
 backgroundImgPath = "./images/jd_background.png"
 blockImgPath = "./images/jd_block.png"
@@ -48,12 +46,6 @@ def login(driver: webdriver.Chrome) -> None:
     # 点击登录
     driver.find_element(By.XPATH, '//*[@id="app"]/div/a').click()
 
-    # 处理图片
-    maxLoc = handlingImg()
-
-    # 处理滑块验证
-    handlingSlider(driver, maxLoc)
-
 
 def handlingImg() -> int:
     # 获取滑块图片
@@ -80,7 +72,7 @@ def handlingImg() -> int:
 
     # 获取滑块在缺口图的位置
     resultMatrix = cv2.matchTemplate(backgroundImg, blockImg, cv2.TM_CCOEFF_NORMED)
-    _minVal, _maxVal, minLoc, maxLoc = cv2.minMaxLoc(resultMatrix)  # 获取最佳与最差匹配
+    _minVal, _maxVal, minLoc, maxLoc = cv2.minMaxLoc(resultMatrix)
     print(_minVal, _maxVal, minLoc, maxLoc)
 
     # 返回最佳匹配的横坐标
@@ -90,23 +82,20 @@ def handlingImg() -> int:
 def handlingSlider(driver: webdriver.Chrome, maxLoc) -> None:
     # 调整滑块需要移动的距离
     # 由于获取到的图片与页面展示的图片的像素不一样，页面展示的图片是经过压缩的，所以要先等比例调整。
-    # 然后由于滑块不是从最左侧开始移动的，所以还要减去滑块左侧的一部分距离
-    distance = maxLoc * 341 / 680 - 37
+    distance = maxLoc * 275 / 290
 
-    # 获取滑块元素
     slider = driver.find_element(By.XPATH, '//*[@id="captcha_modal"]/div/div[3]/div/div')
 
-    # 移动滑块
-    action = ActionChains(driver)  # 实例化一个动作链
-    action.click_and_hold(slider).perform()  # 按住滑块
+    action = ActionChains(driver)
+    action.click_and_hold(slider).perform()
 
     # 将需要移动的距离拆分为多段
     tracks, backTracks = get_track(distance)
     for track in tracks:
         action.move_by_offset(track, int(random.uniform(-1, 1))).perform()
-    action.move_by_offset(backTracks, int(random.uniform(-1, 1))).perform()
+    # action.move_by_offset(backTracks, int(random.uniform(-1, 1))).perform()
 
-    action.release().perform()  # 释放滑块
+    action.release().perform()
 
     # time.sleep(3)
 
@@ -127,7 +116,6 @@ def get_track(distanceTotal: int):
     print(tracks)
 
     backTracks = 0
-
     if sum(tracks) > distanceTotal:
         backTracks = distanceTotal - sum(tracks)
         print(backTracks)
@@ -137,12 +125,14 @@ def get_track(distanceTotal: int):
 
 if __name__ == "__main__":
     driver = initWebDriver()
-    # login(driver)
+    login(driver)
 
     # 单独测试滑块功能，要保证页面已打开且已显示滑块验证
-    for handle in driver.window_handles:
-        driver.switch_to.window(handle)
-        if driver.title == "京东登录注册":
-            break
+    # for handle in driver.window_handles:
+    #     driver.switch_to.window(handle)
+    #     if driver.title == "京东登录注册":
+    #         break
+    # 处理图片
     maxLoc = handlingImg()
+    # 处理滑块验证
     handlingSlider(driver, maxLoc)
