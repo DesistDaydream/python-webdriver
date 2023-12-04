@@ -162,7 +162,6 @@ def handlingSlider(driver: webdriver.Chrome):
         small_img = driver.find_element(By.XPATH, "//img[@id='small_img']")
         with open(smallImgPath, "wb") as f:
             f.write(base64.b64decode(small_img.get_attribute("src")[22:]))
-            small_img
 
         # 将图片灰度后，对比两张图片以定位滑块位置
         backgroud_img = cv2.imread(cpcImgPath, 0)

@@ -1,5 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver import ActionChains
+
+import time
 
 
 def initWebDriver() -> webdriver.Chrome:
@@ -19,6 +22,21 @@ def XPath(driver: webdriver.Chrome):
 
     # 模拟点击该元素
     btn.click()
+
+
+def sliderHandling(driver: webdriver.Chrome):
+    driver.get("https://www.selenium.dev/selenium/web/rc/tests/html/slider/example.html")
+    time.sleep(2)
+    sliderEle = driver.find_element(By.XPATH, '//*[@id="slider01"]')
+
+    action = ActionChains(driver)  # 实例化一个动作链
+    action.click_and_hold(sliderEle).perform()  # 按住滑块
+
+    # 移动滑块。move_by_offset 第一个参数为 x 轴移动举例，第二个参数为 y 轴移动距离
+    # 官方这个滑块页面中的滑块咋没法移动呢？
+    action.pause(0.3).move_by_offset(-5, 0).perform()
+
+    action.release().perform()  # 释放滑块
 
 
 if __name__ == "__main__":
@@ -41,3 +59,5 @@ if __name__ == "__main__":
 
     # 通过 XPath 定位元素
     XPath(driver)
+
+    sliderHandling(driver)
